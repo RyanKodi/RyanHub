@@ -50,6 +50,27 @@ function createInitialScreen()
     end)
 end
 
+-- Função para pegar a missão do nível do jogador
+function getMission()
+    local missionGivers = game.Workspace:FindFirstChild("MissionGivers")
+    if missionGivers then
+        for _, giver in pairs(missionGivers:GetChildren()) do
+            if giver:FindFirstChild("Humanoid") then
+                player.Character.HumanoidRootPart.CFrame = giver.HumanoidRootPart.CFrame
+                wait(1) -- Aumentar o tempo de espera
+                fireclickdetector(giver.ClickDetector)
+                wait(2) -- Aumentar o tempo de espera
+                -- Supondo que a missão seja aceita automaticamente
+                print("Missão aceita do NPC: " .. giver.Name)
+                return true
+            end
+        end
+    else
+        print("MissionGivers não encontrado no Workspace")
+    end
+    return false
+end
+
 -- Função para farmar inimigos na ilha do seu nível
 function farmEnemies()
     local enemies = game.Workspace:FindFirstChild("Enemies")
@@ -58,10 +79,11 @@ function farmEnemies()
             if enemy:FindFirstChild("Humanoid") and enemy.Humanoid.Health > 0 then
                 if enemy:FindFirstChild("HumanoidRootPart") then
                     player.Character.HumanoidRootPart.CFrame = enemy.HumanoidRootPart.CFrame
-                    wait(0.5)
+                    wait(1) -- Aumentar o tempo de espera
                     -- Ataque o inimigo
                     game:GetService("VirtualUser"):CaptureController()
                     game:GetService("VirtualUser"):Button1Down(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
+                    wait(1) -- Aumentar o tempo de espera
                 else
                     print("HumanoidRootPart não encontrado para o inimigo: " .. enemy.Name)
                 end
@@ -79,8 +101,9 @@ function collectFruits()
         for _, fruit in pairs(fruits:GetChildren()) do
             if fruit:IsA("Tool") then
                 player.Character.HumanoidRootPart.CFrame = fruit.Handle.CFrame
-                wait(0.5)
+                wait(1) -- Aumentar o tempo de espera
                 fireclickdetector(fruit.Handle.ClickDetector)
+                wait(1) -- Aumentar o tempo de espera
             end
         end
     else
@@ -91,15 +114,17 @@ end
 -- Funções para iniciar os loops
 function startFarmLoop()
     while true do
-        farmEnemies()
-        wait(10) -- Espera 10 segundos antes de repetir
+        if getMission() then
+            farmEnemies()
+        end
+        wait(15) -- Aumentar o tempo de espera
     end
 end
 
 function startCollectLoop()
     while true do
         collectFruits()
-        wait(10) -- Espera 10 segundos antes de repetir
+        wait(15) -- Aumentar o tempo de espera
     end
 end
 
