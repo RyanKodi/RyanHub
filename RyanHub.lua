@@ -10,7 +10,7 @@ function createInitialScreen()
 
     ScreenGui.Parent = player:WaitForChild("PlayerGui")
     Frame.Parent = ScreenGui
-    Frame.BackgroundColor3 = Color3.new(0, 0, 0)
+    Frame.BackgroundColor3 = Color3.new(0, 0, 1) -- Cor azul
     Frame.Size = UDim2.new(0, 300, 0, 200)
     Frame.Position = UDim2.new(0.5, -150, 0.5, -100)
 
@@ -42,11 +42,11 @@ function createInitialScreen()
 
     -- Conectar funções aos botões
     FarmButton.MouseButton1Click:Connect(function()
-        farmEnemies()
+        startFarmLoop()
     end)
 
     CollectButton.MouseButton1Click:Connect(function()
-        collectFruits()
+        startCollectLoop()
     end)
 end
 
@@ -85,6 +85,21 @@ function collectFruits()
         end
     else
         print("Fruits não encontrado no Workspace")
+    end
+end
+
+-- Funções para iniciar os loops
+function startFarmLoop()
+    while true do
+        farmEnemies()
+        wait(10) -- Espera 10 segundos antes de repetir
+    end
+end
+
+function startCollectLoop()
+    while true do
+        collectFruits()
+        wait(10) -- Espera 10 segundos antes de repetir
     end
 end
 
