@@ -1,132 +1,153 @@
-local player = game.Players.LocalPlayer
+-- Criação da GUI principal
+local ScreenGui = Instance.new("ScreenGui")
+local MainFrame = Instance.new("Frame")
+local MainButton = Instance.new("TextButton")
+local BuyButton = Instance.new("TextButton")
+local HomeButton = Instance.new("TextButton")
 
--- Função para criar a tela inicial
-function createInitialScreen()
-    local ScreenGui = Instance.new("ScreenGui")
-    local Frame = Instance.new("Frame")
-    local TextLabel = Instance.new("TextLabel")
+-- Configuração da GUI
+ScreenGui.Name = "BloxFruitsGUI"
+ScreenGui.Parent = game.CoreGui
+
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = ScreenGui
+MainFrame.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
+MainFrame.Position = UDim2.new(0.5, -100, 0.5, -100)
+MainFrame.Size = UDim2.new(0, 200, 0, 200)
+
+MainButton.Name = "MainButton"
+MainButton.Parent = MainFrame
+MainButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+MainButton.Position = UDim2.new(0.1, 0, 0.1, 0)
+MainButton.Size = UDim2.new(0.8, 0, 0.2, 0)
+MainButton.Text = "Main"
+
+BuyButton.Name = "BuyButton"
+BuyButton.Parent = MainFrame
+BuyButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+BuyButton.Position = UDim2.new(0.1, 0, 0.4, 0)
+BuyButton.Size = UDim2.new(0.8, 0, 0.2, 0)
+BuyButton.Text = "Buy"
+
+HomeButton.Name = "HomeButton"
+HomeButton.Parent = MainFrame
+HomeButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+HomeButton.Position = UDim2.new(0.1, 0, 0.7, 0)
+HomeButton.Size = UDim2.new(0.8, 0, 0.2, 0)
+HomeButton.Text = "Home"
+
+-- Função para criar a aba Main
+local function createMainTab()
+    local MainTab = Instance.new("Frame")
     local FarmButton = Instance.new("TextButton")
-    local CollectButton = Instance.new("TextButton")
+    local FruitButton = Instance.new("TextButton")
 
-    ScreenGui.Parent = player:WaitForChild("PlayerGui")
-    Frame.Parent = ScreenGui
-    Frame.BackgroundColor3 = Color3.new(0, 0, 1) -- Cor azul
-    Frame.Size = UDim2.new(0, 300, 0, 200)
-    Frame.Position = UDim2.new(0.5, -150, 0.5, -100)
+    MainTab.Name = "MainTab"
+    MainTab.Parent = ScreenGui
+    MainTab.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
+    MainTab.Position = UDim2.new(0.5, -100, 0.5, -100)
+    MainTab.Size = UDim2.new(0, 200, 0, 200)
+    MainTab.Visible = false
 
-    TextLabel.Parent = Frame
-    TextLabel.Text = "Ryan Hub"
-    TextLabel.Size = UDim2.new(1, 0, 0.3, 0)
-    TextLabel.TextColor3 = Color3.new(1, 1, 1)
-    TextLabel.BackgroundTransparency = 1
-    TextLabel.Font = Enum.Font.SourceSans
-    TextLabel.TextSize = 24
-
-    FarmButton.Parent = Frame
-    FarmButton.Text = "Iniciar Farm"
+    FarmButton.Name = "FarmButton"
+    FarmButton.Parent = MainTab
+    FarmButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+    FarmButton.Position = UDim2.new(0.1, 0, 0.1, 0)
     FarmButton.Size = UDim2.new(0.8, 0, 0.2, 0)
-    FarmButton.Position = UDim2.new(0.1, 0, 0.4, 0)
-    FarmButton.BackgroundColor3 = Color3.new(0.2, 0.8, 0.2)
-    FarmButton.TextColor3 = Color3.new(1, 1, 1)
-    FarmButton.Font = Enum.Font.SourceSans
-    FarmButton.TextSize = 18
+    FarmButton.Text = "Farm Level"
 
-    CollectButton.Parent = Frame
-    CollectButton.Text = "Coletar Frutas"
-    CollectButton.Size = UDim2.new(0.8, 0, 0.2, 0)
-    CollectButton.Position = UDim2.new(0.1, 0, 0.7, 0)
-    CollectButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.8)
-    CollectButton.TextColor3 = Color3.new(1, 1, 1)
-    CollectButton.Font = Enum.Font.SourceSans
-    CollectButton.TextSize = 18
+    FruitButton.Name = "FruitButton"
+    FruitButton.Parent = MainTab
+    FruitButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+    FruitButton.Position = UDim2.new(0.1, 0, 0.4, 0)
+    FruitButton.Size = UDim2.new(0.8, 0, 0.2, 0)
+    FruitButton.Text = "Collect Fruits"
 
-    -- Conectar funções aos botões
-    FarmButton.MouseButton1Click:Connect(function()
-        startFarmLoop()
-    end)
-
-    CollectButton.MouseButton1Click:Connect(function()
-        startCollectLoop()
-    end)
+    return MainTab
 end
 
--- Função para pegar a missão do nível do jogador
-function getMission()
-    local missionGivers = game.Workspace:FindFirstChild("MissionGivers")
-    if missionGivers then
-        for _, giver in pairs(missionGivers:GetChildren()) do
-            if giver:FindFirstChild("Humanoid") then
-                player.Character.HumanoidRootPart.CFrame = giver.HumanoidRootPart.CFrame
-                wait(1) -- Aumentar o tempo de espera
-                fireclickdetector(giver.ClickDetector)
-                wait(2) -- Aumentar o tempo de espera
-                -- Supondo que a missão seja aceita automaticamente
-                print("Missão aceita do NPC: " .. giver.Name)
-                return true
-            end
-        end
-    else
-        print("MissionGivers não encontrado no Workspace")
-    end
-    return false
+-- Função para criar a aba Buy
+local function createBuyTab()
+    local BuyTab = Instance.new("Frame")
+    local SpinButton = Instance.new("TextButton")
+    local ShopButton = Instance.new("TextButton")
+
+    BuyTab.Name = "BuyTab"
+    BuyTab.Parent = ScreenGui
+    BuyTab.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
+    BuyTab.Position = UDim2.new(0.5, -100, 0.5, -100)
+    BuyTab.Size = UDim2.new(0, 200, 0, 200)
+    BuyTab.Visible = false
+
+    SpinButton.Name = "SpinButton"
+    SpinButton.Parent = BuyTab
+    SpinButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+    SpinButton.Position = UDim2.new(0.1, 0, 0.1, 0)
+    SpinButton.Size = UDim2.new(0.8, 0, 0.2, 0)
+    SpinButton.Text = "Girar Fruta"
+
+    ShopButton.Name = "ShopButton"
+    ShopButton.Parent = BuyTab
+    ShopButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+    ShopButton.Position = UDim2.new(0.1, 0, 0.4, 0)
+    ShopButton.Size = UDim2.new(0.8, 0, 0.2, 0)
+    ShopButton.Text = "Open Shop Fruits"
+
+    return BuyTab
 end
 
--- Função para farmar inimigos na ilha do seu nível
-function farmEnemies()
-    local enemies = game.Workspace:FindFirstChild("Enemies")
-    if enemies then
-        for _, enemy in pairs(enemies:GetChildren()) do
-            if enemy:FindFirstChild("Humanoid") and enemy.Humanoid.Health > 0 then
-                if enemy:FindFirstChild("HumanoidRootPart") then
-                    player.Character.HumanoidRootPart.CFrame = enemy.HumanoidRootPart.CFrame
-                    wait(1) -- Aumentar o tempo de espera
-                    -- Ataque o inimigo
-                    game:GetService("VirtualUser"):CaptureController()
-                    game:GetService("VirtualUser"):Button1Down(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
-                    wait(1) -- Aumentar o tempo de espera
-                else
-                    print("HumanoidRootPart não encontrado para o inimigo: " .. enemy.Name)
-                end
-            end
-        end
-    else
-        print("Enemies não encontrado no Workspace")
-    end
+-- Função para criar a aba Home
+local function createHomeTab()
+    local HomeTab = Instance.new("Frame")
+    local MadeByLabel = Instance.new("TextLabel")
+    local GithubLabel = Instance.new("TextLabel")
+
+    HomeTab.Name = "HomeTab"
+    HomeTab.Parent = ScreenGui
+    HomeTab.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
+    HomeTab.Position = UDim2.new(0.5, -100, 0.5, -100)
+    HomeTab.Size = UDim2.new(0, 200, 0, 200)
+    HomeTab.Visible = false
+
+    MadeByLabel.Name = "MadeByLabel"
+    MadeByLabel.Parent = HomeTab
+    MadeByLabel.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
+    MadeByLabel.Position = UDim2.new(0.1, 0, 0.1, 0)
+    MadeByLabel.Size = UDim2.new(0.8, 0, 0.2, 0)
+    MadeByLabel.Text = "Feito por Pequenoreiaz10"
+    MadeByLabel.TextColor3 = Color3.new(1, 1, 1)
+
+    GithubLabel.Name = "GithubLabel"
+    GithubLabel.Parent = HomeTab
+    GithubLabel.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
+    GithubLabel.Position = UDim2.new(0.1, 0, 0.4, 0)
+    GithubLabel.Size = UDim2.new(0.8, 0, 0.2, 0)
+    GithubLabel.Text = "Meu Perfil do Github: RyanKodi"
+    GithubLabel.TextColor3 = Color3.new(1, 1, 1)
+
+    return HomeTab
 end
 
--- Função para pegar frutas no chão
-function collectFruits()
-    local fruits = game.Workspace:FindFirstChild("Fruits")
-    if fruits then
-        for _, fruit in pairs(fruits:GetChildren()) do
-            if fruit:IsA("Tool") then
-                player.Character.HumanoidRootPart.CFrame = fruit.Handle.CFrame
-                wait(1) -- Aumentar o tempo de espera
-                fireclickdetector(fruit.Handle.ClickDetector)
-                wait(1) -- Aumentar o tempo de espera
-            end
-        end
-    else
-        print("Fruits não encontrado no Workspace")
-    end
-end
+-- Criação das abas
+local MainTab = createMainTab()
+local BuyTab = createBuyTab()
+local HomeTab = createHomeTab()
 
--- Funções para iniciar os loops
-function startFarmLoop()
-    while true do
-        if getMission() then
-            farmEnemies()
-        end
-        wait(15) -- Aumentar o tempo de espera
-    end
-end
+-- Funções dos botões
+MainButton.MouseButton1Click:Connect(function()
+    MainTab.Visible = not MainTab.Visible
+    BuyTab.Visible = false
+    HomeTab.Visible = false
+end)
 
-function startCollectLoop()
-    while true do
-        collectFruits()
-        wait(15) -- Aumentar o tempo de espera
-    end
-end
+BuyButton.MouseButton1Click:Connect(function()
+    BuyTab.Visible = not BuyTab.Visible
+    MainTab.Visible = false
+    HomeTab.Visible = false
+end)
 
--- Chama a função para criar a tela inicial
-createInitialScreen()
+HomeButton.MouseButton1Click:Connect(function()
+    HomeTab.Visible = not HomeTab.Visible
+    MainTab.Visible = false
+    BuyTab.Visible = false
+end)
